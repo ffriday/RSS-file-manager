@@ -1,4 +1,4 @@
-const getArgs = () => {
+export const getArgs = () => {
   const usernameArg = process.argv.find((arg) => arg.startsWith("--username"));
   let username = "anonymous";
   if (usernameArg && usernameArg.indexOf("=") >= 0) {
@@ -7,5 +7,3 @@ const getArgs = () => {
   }
   return username;
 };
-
-export default getArgs;
