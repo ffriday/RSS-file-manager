@@ -1,0 +1,13 @@
+{
+  "name": "rss-file-manager",
+  "version": "1.0.0",
+  "description": "RSSschool task",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./src/start.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
