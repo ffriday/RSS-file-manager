@@ -1,5 +1,4 @@
 import { createInterface } from "node:readline";
-import { homedir } from "node:os";
 
 import { getArgs } from "./functions/getArgs.js";
 import {
@@ -7,11 +6,12 @@ import {
   handleInvalidInput,
   Handlers,
 } from "./functions/Handlers.js";
+import { getPath } from "./functions/getPath.js";
 
-const createStream = (currentDir, userName) => {
-  const dir = () => console.log(`You are currently in ${currentDir}`);
+const createStream = (userName) => {
+  const printDir = () => console.log(`You are currently in ${dir.path()}`);
   console.log(`Welcome to the File Manager, ${userName}!`);
-  dir();
+  printDir();
 
   const handlers = Handlers(userName);
 
@@ -20,15 +20,19 @@ const createStream = (currentDir, userName) => {
     output: process.stdout,
   });
 
-  rl.on("line", (input) => {
+  rl.on("line", async (input) => {
     const [command, ...args] = input
       .split(" ")
       .map((word) => word.trim())
       .filter((word) => word);
 
     if (command in handlers) {
-      if (command !== ".exit") dir();
-      handlers[command](...args);
+      const err = await handlers[command](...args);
+      if (err) {
+        handleInvalidInput();
+      } else {
+        printDir();
+      };
     } else {
       handleInvalidInput();
     }
@@ -39,8 +43,8 @@ const createStream = (currentDir, userName) => {
 
 const start = () => {
   const userName = getArgs();
-  let currentDir = homedir();
-  createStream(currentDir, userName);
+  createStream(userName);
 };
 
+export const dir = getPath();
 start();

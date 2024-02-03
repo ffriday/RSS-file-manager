@@ -1,6 +1,12 @@
-export const Handlers = (userName) => {
+import { dir } from "../start.js";
+import { handleCD, handleLS } from "./myFS.js";
+
+export const Handlers = () => {
   return {
     [".exit"]: handleExit,
+    up: dir.up,
+    cd: handleCD,
+    ls: handleLS,
   };
 };
 
@@ -9,6 +15,6 @@ export const handleExit = (userName) => {
   process.exit(0);
 };
 
-export const handleInvalidInput = () => console.log('Invalid input');
+export const handleInvalidInput = () => console.log("Invalid input");
 
-export const handleOperationFailed = () => console.log('Operation failed');
+export const handleOperationFailed = () => console.log("Operation failed");
