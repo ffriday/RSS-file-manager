@@ -19,8 +19,25 @@ export const handleLS = async () => {
   try {
     await access(dir.path());
     const list = await readdir(dir.path());
-    console.log(list);
+    const [dirs, files] = [[], []];
+    for (const line of list) {
+      const stats = await stat(join(dir.path(), line));
+      if (stats.isDirectory()) dirs.push([line, "directory"]);
+      if (stats.isFile()) files.push([line, "file"]);
+    }
+    dirs.sort();
+    files.sort();
+    const result = dirs.concat(files).map((line, i) => [i, ...line]);
+    console.log(prettifyLS(result));
   } catch {
     return true;
   }
+};
+
+const prettifyLS = (list) => {
+  return list.reduce((acc, line) => {
+    const newLine = `${line[0]} ${line[1]} ${line[2]}`;
+    acc = `${acc}\n${newLine}`;
+    return acc;
+  }, "");
 };
