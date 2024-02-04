@@ -7,7 +7,6 @@ import {
   readdir,
   constants,
   rename,
-  copyFile,
   rm,
 } from "node:fs/promises";
 import { printDir } from "./Handlers.js";

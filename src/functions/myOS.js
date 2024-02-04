@@ -15,7 +15,6 @@ const handlers = {
 }
 
 export const myOS = async (arg) => {
-  if (!arg) return true;
   if (arg in handlers) {
     return await handlers[arg]();
   } else {
