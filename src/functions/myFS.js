@@ -1,8 +1,7 @@
 import { dir } from "../start.js";
 import { join } from "node:path";
-import { createReadStream, createWriteStream } from 'node:fs';
-import { stat, access, readdir } from "node:fs/promises";
-import { pipeline } from "node:stream/promises";
+import { createReadStream, createWriteStream } from "node:fs";
+import { stat, access, readdir, constants, rename } from "node:fs/promises";
 import { printDir } from "./Handlers.js";
 
 export const handleCD = async (path) => {
@@ -50,13 +49,50 @@ export const handleCat = async (path) => {
     const fullPath = join(dir.path(), path);
     const stats = await stat(fullPath);
     if (stats.isFile()) {
-      const readStream = createReadStream(fullPath, {encoding: 'utf-8'});
-      readStream.on('data', (data) => console.log(data));
-      readStream.on('end', printDir);
+      const readStream = createReadStream(fullPath, { encoding: "utf-8" });
+      readStream.on("data", (data) => console.log(data));
+      readStream.on("end", printDir);
+      return;
     } else {
       return true;
     }
   } catch (err) {
     return true;
+  }
+};
+
+export const handleAdd = async (path) => {
+  const fullPath = join(dir.path(), path);
+  try {
+    await access(fullPath, constants.F_OK);
+    return true;
+  } catch (err) {
+    if (err.code === "ENOENT") {
+      try {
+        const writeStream = createWriteStream(fullPath);
+        writeStream.close();
+      } catch {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
+};
+
+export const handleRename = async (src, dest) => {
+  if (!src || !dest) return true;
+  const srcPath = join(dir.path(), src);
+  const destPath = join(dir.path(), dest);
+  try {
+    await access(destPath, constants.F_OK);
+    return true;
+  } catch {
+    try {
+      await access(srcPath, constants.F_OK);
+      await rename(srcPath, destPath);
+    } catch {
+      return true;
+    }
   }
 };

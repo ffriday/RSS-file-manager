@@ -1,5 +1,11 @@
 import { dir } from "../start.js";
-import { handleCD, handleCat, handleLS } from "./myFS.js";
+import {
+  handleAdd,
+  handleCD,
+  handleCat,
+  handleLS,
+  handleRename,
+} from "./myFS.js";
 
 export const Handlers = () => {
   return {
@@ -8,6 +14,8 @@ export const Handlers = () => {
     cd: handleCD,
     ls: handleLS,
     cat: handleCat,
+    add: handleAdd,
+    rn: handleRename,
   };
 };
 

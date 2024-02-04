@@ -22,8 +22,8 @@ const createStream = (userName) => {
 
   rl.on("line", async (input) => {
     const [command, ...args] = input
-      .split(" ")
-      .map((word) => word.trim())
+      .split(/(?<!\\)\s/)
+      .map((word) => word.replaceAll("\\ ", " ").trim())
       .filter((word) => word);
 
     if (command in handlers) {
@@ -32,7 +32,7 @@ const createStream = (userName) => {
         handleInvalidInput();
       } else {
         printDir();
-      };
+      }
     } else {
       handleInvalidInput();
     }
