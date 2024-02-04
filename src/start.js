@@ -5,11 +5,11 @@ import {
   handleExit,
   handleInvalidInput,
   Handlers,
+  printDir,
 } from "./functions/Handlers.js";
 import { getPath } from "./functions/getPath.js";
 
 const createStream = (userName) => {
-  const printDir = () => console.log(`You are currently in ${dir.path()}`);
   console.log(`Welcome to the File Manager, ${userName}!`);
   printDir();
 
