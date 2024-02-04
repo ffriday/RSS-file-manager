@@ -1,7 +1,15 @@
 import { dir } from "../start.js";
 import { join } from "node:path";
 import { createReadStream, createWriteStream } from "node:fs";
-import { stat, access, readdir, constants, rename } from "node:fs/promises";
+import {
+  stat,
+  access,
+  readdir,
+  constants,
+  rename,
+  copyFile,
+  rm,
+} from "node:fs/promises";
 import { printDir } from "./Handlers.js";
 
 export const handleCD = async (path) => {
@@ -94,5 +102,54 @@ export const handleRename = async (src, dest) => {
     } catch {
       return true;
     }
+  }
+};
+
+export const handleCopy = async (src, dest) => {
+  if (!src || !dest) return true;
+  const srcPath = join(dir.path(), src);
+  const destPath = join(dir.path(), dest);
+  try {
+    await access(destPath, constants.F_OK);
+    return true;
+  } catch {
+    try {
+      const stats = await stat(srcPath);
+      if (stats.isFile()) {
+        const readStream = createReadStream(srcPath);
+        const writeStream = createWriteStream(destPath);
+        readStream.pipe(writeStream);
+
+        writeStream.on("finish", () => printDir);
+        writeStream.on("error", () => {
+          throw new Error();
+        });
+        readStream.on("error", () => {
+          throw new Error();
+        });
+      } else {
+        return true;
+      }
+    } catch {
+      return true;
+    }
+  }
+};
+
+export const handleRemove = async (path) => {
+  const fullPath = join(dir.path(), path);
+  try {
+    await rm(fullPath)
+  } catch {
+    return true;
+  }
+};
+
+export const handleMove = async (src, dest) => {
+  const err = await handleCopy(src, dest);
+  if (err) {
+    return true;
+  } else {
+    return await handleRemove(src);
   }
 };
