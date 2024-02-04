@@ -9,6 +9,7 @@ import {
   handleRemove,
   handleRename,
 } from "./myFS.js";
+import { myOS } from "./myOS.js";
 
 export const Handlers = () => {
   return {
@@ -22,6 +23,7 @@ export const Handlers = () => {
     cp: handleCopy,
     rm: handleRemove,
     mv: handleMove,
+    os: myOS,
   };
 };
 

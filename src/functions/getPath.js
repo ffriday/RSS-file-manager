@@ -7,7 +7,6 @@ export const getPath = () => {
     path: () => currentDir,
     up: () => {
       currentDir = resolve(currentDir, "..");
-      console.log(currentDir);
     },
     cd: (path) => {
       currentDir = resolve(currentDir, path);
