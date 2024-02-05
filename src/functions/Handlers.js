@@ -11,6 +11,7 @@ import {
 } from "./myFS.js";
 import { handleHash } from "./myHash.js";
 import { myOS } from "./myOS.js";
+import { handleCompress, handleDecmpress } from "./myZip.js";
 
 export const Handlers = () => {
   return {
@@ -26,6 +27,8 @@ export const Handlers = () => {
     mv: handleMove,
     os: myOS,
     hash: handleHash,
+    compress: handleCompress,
+    decompress: handleDecmpress,
   };
 };
 

@@ -1,14 +1,7 @@
 import { dir } from "../start.js";
 import { join } from "node:path";
 import { createReadStream, createWriteStream } from "node:fs";
-import {
-  stat,
-  access,
-  readdir,
-  constants,
-  rename,
-  rm,
-} from "node:fs/promises";
+import { stat, access, readdir, constants, rename, rm } from "node:fs/promises";
 import { printDir } from "./Handlers.js";
 
 export const handleCD = async (path) => {
@@ -44,9 +37,13 @@ export const handleLS = async () => {
 };
 
 const prettifyLS = (list) => {
-  return list.reduce((acc, line) => {
-    const newLine = `${line[0]} ${line[1]} ${line[2]}`;
-    acc = `${acc}\n${newLine}`;
+  list.unshift(["Index", "Name", "Type"]);
+  return list.reduce((acc, [index, name, type]) => {
+    const line = Array(70).fill(" ");
+    line.splice(0, index.toString().length, ...index.toString().split(""));
+    line.splice(10, name.toString().length, ...name.toString().split(""));
+    line.splice(60, type.toString().length, ...type.toString().split(""));
+    acc = `${acc}\n${line.join("")}`;
     return acc;
   }, "");
 };
@@ -138,7 +135,7 @@ export const handleCopy = async (src, dest) => {
 export const handleRemove = async (path) => {
   const fullPath = join(dir.path(), path);
   try {
-    await rm(fullPath)
+    await rm(fullPath);
   } catch {
     return true;
   }
